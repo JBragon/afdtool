@@ -1,0 +1,2 @@
+# afdtool
+AFD e operações
