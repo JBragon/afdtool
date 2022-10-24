@@ -1,0 +1,14 @@
+2
+A
+B
+2
+a
+b
+4
+A a B
+A b A
+B a A
+B b B
+A
+1
+A

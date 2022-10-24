@@ -1,0 +1,22 @@
+4
+A&C
+A&D
+B&C
+B&D
+2
+b
+a
+8
+A&C a B&C
+A&D a B&D
+A&C b A&D
+A&D b A&C
+B&C a A&C
+B&D a A&D
+B&C b B&D
+B&D b B&C
+A&C
+3
+A&C
+A&D
+B&C
