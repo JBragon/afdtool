@@ -5,10 +5,7 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "Portuguese");
 
     int operacao = BuscaOperacao(argv[1]);
-    double tempoDecorrido = 0.0;
-
-    clock_t inicio = clock();
-
+    
     switch (operacao)
     {
     case VISUALIZAR:
@@ -49,12 +46,6 @@ int main(int argc, char *argv[])
         ImprimirAjuda();
         return 1;
     }
-
-    clock_t fim = clock();
-
-    tempoDecorrido += (double)(fim - inicio) / CLOCKS_PER_SEC;
- 
-    printf("Tempo de resposta: %f segundos\n", tempoDecorrido);
 
     return 1;
 }

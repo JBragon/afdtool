@@ -3,6 +3,10 @@
 void UniaoAFD(char *nomeArquivoAFD1, char *nomeArquivoAFD2, char *nomeArquivoSaida)
 {
     printf("União entre AFD's!\n");
+
+    double tempoDecorrido = 0.0;
+    clock_t inicio = clock();
+
     AFD *afd1 = LerArquivo(nomeArquivoAFD1);
     AFD *afd2 = LerArquivo(nomeArquivoAFD2);
 
@@ -67,4 +71,8 @@ void UniaoAFD(char *nomeArquivoAFD1, char *nomeArquivoAFD2, char *nomeArquivoSai
     uniao->QTDEstadosFinais = QTDEstadosFinais;
 
     CriarArquivo(uniao, nomeArquivoSaida);
+
+    clock_t fim = clock();
+    tempoDecorrido += (double)(fim - inicio) / CLOCKS_PER_SEC;
+    printf("Tempo de resposta: %f segundos\n", tempoDecorrido);
 }

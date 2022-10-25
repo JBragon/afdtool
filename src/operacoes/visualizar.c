@@ -3,6 +3,8 @@
 void ConverterAFDParaDot(char *nomeArquivoEntrada, char *nomeArquivoSaida)
 {
     printf("Converter ADF para DOT!\n");
+    double tempoDecorrido = 0.0;
+    clock_t inicio = clock();
 
     AFD *afd = LerArquivo(nomeArquivoEntrada);
 
@@ -10,6 +12,9 @@ void ConverterAFDParaDot(char *nomeArquivoEntrada, char *nomeArquivoSaida)
 
     printf("Arquivo %s exportado.\n", nomeArquivoSaida);
 
+    clock_t fim = clock();
+    tempoDecorrido += (double)(fim - inicio) / CLOCKS_PER_SEC;
+    printf("Tempo de resposta: %f segundos\n", tempoDecorrido);
 }
 
 void GerarDot(AFD *afd, char *nomeArquivoSaida)

@@ -4,6 +4,9 @@ void ReconhecerPalavra(char *nomeArquivoAFD, char *nomeArquivoPalavras, char *no
 {
     printf("Reconhecimento de palavra no AFD!\n");
 
+    double tempoDecorrido = 0.0;
+    clock_t inicio = clock();
+
     AFD *afd = LerArquivo(nomeArquivoAFD);
 
     FILE *arquivoPalavras = fopen(nomeArquivoPalavras, "rt");
@@ -19,7 +22,7 @@ void ReconhecerPalavra(char *nomeArquivoAFD, char *nomeArquivoPalavras, char *no
     char linhaArquivo[STRLENGTH];
     char *simbolo;
 
-    //Percorrendo todo o arquivo
+    // Percorrendo todo o arquivo
     while (fgets(linhaArquivo, STRLENGTH, arquivoPalavras))
     {
         int palavraReconhecida = 0;
@@ -27,24 +30,27 @@ void ReconhecerPalavra(char *nomeArquivoAFD, char *nomeArquivoPalavras, char *no
 
         Estado *estado = RetornaEstadoInicial(afd->Estados);
 
-        //Percorrendo cada simbolo da palavra
+        // Percorrendo cada simbolo da palavra
         while (*simbolo && isdigit(*simbolo))
         {
-            //Percorrendo cada simbolo também percorrerá cada estado do AFD
+            // Percorrendo cada simbolo também percorrerá cada estado do AFD
             estado = RetornaEstadoDestino(afd, estado, *simbolo++);
         }
 
-        if(estado != NULL)
+        if (estado != NULL)
             palavraReconhecida = estado->Final;
 
         fprintf(arquivoDeSaida, "%d\n", palavraReconhecida);
-
     }
 
     fclose(arquivoPalavras);
     fclose(arquivoDeSaida);
 
     printf("Arquivo %s gerado com sucesso.\n", nomeArquivoSaida);
+
+    clock_t fim = clock();
+    tempoDecorrido += (double)(fim - inicio) / CLOCKS_PER_SEC;
+    printf("Tempo de resposta: %f segundos\n", tempoDecorrido);
 }
 
 Estado *RetornaEstadoDestino(AFD *afd, Estado *estado, char simboloAlfabeto)
@@ -54,16 +60,16 @@ Estado *RetornaEstadoDestino(AFD *afd, Estado *estado, char simboloAlfabeto)
     if (transicao == NULL)
         return NULL;
 
-    //Após encontrar a transição, retorna o estado destino da transição para a continuação do reconhecimento
-    //da palavra
+    // Após encontrar a transição, retorna o estado destino da transição para a continuação do reconhecimento
+    // da palavra
     return transicao->EstadoDestino;
 }
 
 /// @brief Verifica e retorna se existe uma transição valida do estado com o cimbolo
-/// @param transicoes 
-/// @param estado 
-/// @param simboloAlfabeto 
-/// @return 
+/// @param transicoes
+/// @param estado
+/// @param simboloAlfabeto
+/// @return
 Transicao *BuscaTransicaoValida(Transicao *transicoes, Estado *estado, char simboloAlfabeto)
 {
     if (transicoes == NULL || transicoes->EstadoOrigem == NULL || estado == NULL)
