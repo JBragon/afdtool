@@ -1,9 +1,9 @@
 digraph finite_state_machine {
 node [shape = doublecircle];
- par;
+"par";
 node [shape = circle];
-impar -> par [label = "1"]
-impar -> par [label = "0"]
-par -> impar [label = "1"]
-par -> impar [label = "0"]
+"impar" -> "par" [label = "1"]
+"impar" -> "par" [label = "0"]
+"par" -> "impar" [label = "1"]
+"par" -> "impar" [label = "0"]
 }

@@ -6,6 +6,7 @@
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
+#include <time.h> 
 
 //ENUMS
 
