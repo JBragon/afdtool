@@ -1,20 +1,25 @@
 #include "../header.h"
 
-void ConverterAFDParaDot(char *nomeArquivoEntrada, char *nomeArquivoSaida)
+
+void EscreverEstadosFinais(Estado *estado, FILE *arquivoDeSaida)
 {
-    printf("Converter ADF para DOT!\n");
-    double tempoDecorrido = 0.0;
-    clock_t inicio = clock();
+    if (estado != NULL) {
+        if (estado->Final == 1) {
+            fprintf(arquivoDeSaida, "\"%s\";", estado->Descricao);
+        }
+        EscreverEstadosFinais(estado->ProximoEstado, arquivoDeSaida);
+    }
+}
 
-    AFD *afd = LerArquivo(nomeArquivoEntrada);
 
-    GerarDot(afd, nomeArquivoSaida);
-
-    printf("Arquivo %s exportado.\n", nomeArquivoSaida);
-
-    clock_t fim = clock();
-    tempoDecorrido += (double)(fim - inicio) / CLOCKS_PER_SEC;
-    printf("Tempo de resposta: %f segundos\n", tempoDecorrido);
+void EscreverTransicoes(Transicao *transicao, FILE *arquivoDeSaida)
+{
+    if (transicao != NULL) {
+        fprintf(arquivoDeSaida, 
+        "\"%s\" -> \"%s\" [label = \"%s\"]\n", transicao->EstadoOrigem->Descricao, 
+        transicao->EstadoDestino->Descricao, transicao->SimboloAlfabeto->Simbolo);
+        EscreverTransicoes(transicao->ProximaTransicao, arquivoDeSaida);
+    }
 }
 
 void GerarDot(AFD *afd, char *nomeArquivoSaida)
@@ -40,22 +45,19 @@ void GerarDot(AFD *afd, char *nomeArquivoSaida)
     fclose(output);
 }
 
-void EscreverEstadosFinais(Estado *estado, FILE *arquivoDeSaida)
+void ConverterAFDParaDot(char *nomeArquivoEntrada, char *nomeArquivoSaida)
 {
-    if (estado != NULL) {
-        if (estado->Final == 1) {
-            fprintf(arquivoDeSaida, "\"%s\";", estado->Descricao);
-        }
-        EscreverEstadosFinais(estado->ProximoEstado, arquivoDeSaida);
-    }
-}
+    printf("Converter ADF para DOT!\n");
+    double tempoDecorrido = 0.0;
+    clock_t inicio = clock();
 
-void EscreverTransicoes(Transicao *transicao, FILE *arquivoDeSaida)
-{
-    if (transicao != NULL) {
-        fprintf(arquivoDeSaida, 
-        "\"%s\" -> \"%s\" [label = \"%s\"]\n", transicao->EstadoOrigem->Descricao, 
-        transicao->EstadoDestino->Descricao, transicao->SimboloAlfabeto->Simbolo);
-        EscreverTransicoes(transicao->ProximaTransicao, arquivoDeSaida);
-    }
+    AFD *afd = LerArquivo(nomeArquivoEntrada);
+
+    GerarDot(afd, nomeArquivoSaida);
+
+    printf("Arquivo %s exportado.\n", nomeArquivoSaida);
+
+    clock_t fim = clock();
+    tempoDecorrido += (double)(fim - inicio) / CLOCKS_PER_SEC;
+    printf("Tempo de resposta: %f segundos\n", tempoDecorrido);
 }

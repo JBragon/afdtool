@@ -1,5 +1,9 @@
 #include "header.h"
 
+
+
+
+
 /// @brief função que irar filtrar a operação para fazer a comparação com o switch case da main.c
 /// @param operacao 
 /// @return 
@@ -27,36 +31,6 @@ int BuscaOperacao(char *operacao)
     return -1;
 }
 
-/// @brief Função que transpila um AFD para um arquivo
-/// @param afd 
-/// @param nomeArquivoDeSaida 
-void CriarArquivo(AFD *afd, char *nomeArquivoDeSaida)
-{
-    FILE *arquivoDeSaida = fopen(nomeArquivoDeSaida, "w");
-
-    if (arquivoDeSaida == NULL)
-    {
-        printf("Erro ao criar arquivo de saída.");
-        exit(EXIT_FAILURE);
-    }
-
-    ExportarEstadosParaArquivo(afd, arquivoDeSaida);
-    ExportarSimbolosParaArquivo(afd, arquivoDeSaida);
-    ExportarTransicoesParaArquivo(afd, arquivoDeSaida);
-    ExportarEstadosIniciaisParaArquivo(afd->Estados, arquivoDeSaida);
-    ExportarEstadosFinaisParaArquivo(afd, arquivoDeSaida);
-
-    fclose(arquivoDeSaida);
-
-    printf("Arquivo %s exportado.\n", nomeArquivoDeSaida);
-}
-
-void ExportarEstadosParaArquivo(AFD *afd, FILE *arquivoDeSaida)
-{
-    fprintf(arquivoDeSaida, "%d\n", afd->QTDEstados);
-
-    ExportarEstados(afd->Estados, arquivoDeSaida);
-}
 
 void ExportarEstados(Estado *estado, FILE *arquivoDeSaida)
 {
@@ -67,12 +41,13 @@ void ExportarEstados(Estado *estado, FILE *arquivoDeSaida)
     }
 }
 
-void ExportarSimbolosParaArquivo(AFD *afd, FILE *arquivoDeSaida)
+void ExportarEstadosParaArquivo(AFD *afd, FILE *arquivoDeSaida)
 {
-    fprintf(arquivoDeSaida, "%d\n", afd->QTDSimbolos);
+    fprintf(arquivoDeSaida, "%d\n", afd->QTDEstados);
 
-    ExportarSimbolos(afd->Alfabeto, arquivoDeSaida);
+    ExportarEstados(afd->Estados, arquivoDeSaida);
 }
+
 
 void ExportarSimbolos(SimboloAlfabeto *simboloAlfabeto, FILE *arquivoDeSaida)
 {
@@ -83,11 +58,14 @@ void ExportarSimbolos(SimboloAlfabeto *simboloAlfabeto, FILE *arquivoDeSaida)
     }
 }
 
-void ExportarTransicoesParaArquivo(AFD *afd, FILE *arquivoDeSaida)
+void ExportarSimbolosParaArquivo(AFD *afd, FILE *arquivoDeSaida)
 {
-    fprintf(arquivoDeSaida, "%d\n", afd->QTDTransicoes);
-    ExportarTransicoes(afd->Transicoes, arquivoDeSaida);
+    fprintf(arquivoDeSaida, "%d\n", afd->QTDSimbolos);
+
+    ExportarSimbolos(afd->Alfabeto, arquivoDeSaida);
 }
+
+
 
 void ExportarTransicoes(Transicao *transicao, FILE *arquivoDeSaida)
 {
@@ -96,6 +74,12 @@ void ExportarTransicoes(Transicao *transicao, FILE *arquivoDeSaida)
         fprintf(arquivoDeSaida, "%s %s %s\n", transicao->EstadoOrigem->Descricao, transicao->SimboloAlfabeto->Simbolo, transicao->EstadoDestino->Descricao);
         ExportarTransicoes(transicao->ProximaTransicao, arquivoDeSaida);
     }
+}
+
+void ExportarTransicoesParaArquivo(AFD *afd, FILE *arquivoDeSaida)
+{
+    fprintf(arquivoDeSaida, "%d\n", afd->QTDTransicoes);
+    ExportarTransicoes(afd->Transicoes, arquivoDeSaida);
 }
 
 void ExportarEstadosIniciaisParaArquivo(Estado *estado, FILE *arquivoDeSaida)
@@ -109,12 +93,6 @@ void ExportarEstadosIniciaisParaArquivo(Estado *estado, FILE *arquivoDeSaida)
     }
 }
 
-void ExportarEstadosFinaisParaArquivo(AFD *afd, FILE *arquivoDeSaida)
-{
-    fprintf(arquivoDeSaida, "%d\n", afd->QTDEstadosFinais);
-
-    ExportarEstadosFinais(afd->Estados, arquivoDeSaida);
-}
 
 void ExportarEstadosFinais(Estado *estado, FILE *arquivoDeSaida)
 {
@@ -126,6 +104,14 @@ void ExportarEstadosFinais(Estado *estado, FILE *arquivoDeSaida)
         ExportarEstadosFinais(estado->ProximoEstado, arquivoDeSaida);
     }
 }
+
+void ExportarEstadosFinaisParaArquivo(AFD *afd, FILE *arquivoDeSaida)
+{
+    fprintf(arquivoDeSaida, "%d\n", afd->QTDEstadosFinais);
+
+    ExportarEstadosFinais(afd->Estados, arquivoDeSaida);
+}
+
 
 void ImprimirAjuda()
 {
@@ -149,4 +135,28 @@ void ValidaArgumentos(int argc)
         ImprimirAjuda();
         exit(EXIT_FAILURE);
     }
+}
+
+/// @brief Função que transpila um AFD para um arquivo
+/// @param afd 
+/// @param nomeArquivoDeSaida 
+void CriarArquivo(AFD *afd, char *nomeArquivoDeSaida)
+{
+    FILE *arquivoDeSaida = fopen(nomeArquivoDeSaida, "w");
+
+    if (arquivoDeSaida == NULL)
+    {
+        printf("Erro ao criar arquivo de saída.");
+        exit(EXIT_FAILURE);
+    }
+
+    ExportarEstadosParaArquivo(afd, arquivoDeSaida);
+    ExportarSimbolosParaArquivo(afd, arquivoDeSaida);
+    ExportarTransicoesParaArquivo(afd, arquivoDeSaida);
+    ExportarEstadosIniciaisParaArquivo(afd->Estados, arquivoDeSaida);
+    ExportarEstadosFinaisParaArquivo(afd, arquivoDeSaida);
+
+    fclose(arquivoDeSaida);
+
+    printf("Arquivo %s exportado.\n", nomeArquivoDeSaida);
 }
